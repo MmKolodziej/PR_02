@@ -4,9 +4,9 @@
 
 using namespace std;
 
-Painter::Painter(int i, int ingredient_ind, int brush_ind) {
+Painter::Painter(int i, int paint_ind, int brush_ind) {
     number = i;
-    _ingredient_ind = ingredient_ind;
+    _paint_ind = paint_ind;
     _brush_ind        = brush_ind;
 
     _painted_lines = 0;
@@ -45,28 +45,28 @@ void Painter::paintLine() {
     releaseStuff();
 }
 
-void Painter::lockIngredient() {
-    printf("[INFO] [%i] Painter tries to obtain ingredient...\n", number);
+void Painter::lockPaint() {
+    printf("[INFO] [%i] Painter tries to obtain paint...\n", number);
     fflush(stdout);
 
-    // Block ingredients
-    pthread_mutex_lock(&ingredients_mutex[_ingredient_ind]);
+    // Block paints
+    pthread_mutex_lock(&paint_mutex[_paint_ind]);
 
-    if(ingredients_count[_ingredient_ind] >= 1)
+    if(paint_count[_paint_ind] >= 1)
     {
-        ingredients_count[_ingredient_ind]--;
+        paint_count[_paint_ind]--;
 
-        printf(ANSI_COLOR_YELLOW "[INFO] [POT] Left: %i\n", ingredients_count[_ingredient_ind]);
-        printf(ANSI_COLOR_GREEN "[SUCC] [%i] Painter found an ingredient in his bowl\n" ANSI_COLOR_RESET, number);
+        printf(ANSI_COLOR_YELLOW "[INFO] [BRUSH] Left: %i\n", paint_count[_paint_ind]);
+        printf(ANSI_COLOR_GREEN "[SUCC] [%i] Painter found an paint in his bowl\n" ANSI_COLOR_RESET, number);
         fflush(stdout);
     }
     else {
-        printf(ANSI_COLOR_YELLOW "[INFO] [POT] Left: %i\n", ingredients_count[_ingredient_ind]);
+        printf(ANSI_COLOR_YELLOW "[INFO] [BRUSH] Left: %i\n", paint_count[_paint_ind]);
         printf(ANSI_COLOR_RED "[FAIL] [%i] Painter found the bowl empty. Waiting for the filling helper...\n" ANSI_COLOR_RESET, number);
         fflush(stdout);
 
         // if resources are not available, wait until Helper notifies it's available
-        pthread_cond_wait(&ingredients_cond[_ingredient_ind], &ingredients_mutex[_ingredient_ind]);
+        pthread_cond_wait(&paint_cond[_paint_ind], &paint_mutex[_paint_ind]);
     }
 }
 
@@ -76,7 +76,7 @@ void Painter::lockBrush() {
 
     pthread_mutex_lock(&brush_mutex[_brush_ind]);
 
-    // Pot is cleared or was used by this painter
+    // Brush is cleared or was used by this painter
     if(brush_usage_side[_brush_ind] == 0 || brush_usage_side[_brush_ind] == _brush_side)
     {
         // Set brush usage to the painter's side
@@ -103,7 +103,7 @@ void Painter::releaseStuff() {
     fflush(stdout);
 
     // Release all mutex after job is finished
-    pthread_mutex_unlock(&ingredients_mutex[_ingredient_ind]);
+    pthread_mutex_unlock(&paint_mutex[_paint_ind]);
     pthread_mutex_unlock(&brush_mutex[_brush_ind]);
 
     printf("[INFO] [%i] Painter released bowl & brush.\n", number);

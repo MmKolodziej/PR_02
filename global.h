@@ -4,12 +4,12 @@
 #include <vector>
 #include <pthread.h>
 
-extern std::vector<pthread_mutex_t> ingredients_mutex;
+extern std::vector<pthread_mutex_t> paint_mutex;
 extern std::vector<pthread_mutex_t> brush_mutex;
-extern std::vector<pthread_cond_t>  ingredients_cond;
+extern std::vector<pthread_cond_t>  paint_cond;
 extern std::vector<pthread_cond_t>  brush_cond;
 
-extern std::vector<int> ingredients_count;
+extern std::vector<int> paint_count;
 extern std::vector<int> brush_usage_side;
 
 extern int brush_count;

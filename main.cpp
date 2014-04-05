@@ -44,21 +44,21 @@ int main(int argc, const char * argv[])
     t_helpers.reserve(2);
     pthread_attr_t attr;
 
-    ingredients_mutex.reserve(brush_count);
-    ingredients_cond.reserve(brush_count);
+    paint_mutex.reserve(brush_count);
+    paint_cond.reserve(brush_count);
     brush_mutex.reserve(brush_count);
     brush_cond.reserve(brush_count);
 
-    ingredients_count.reserve(brush_count);
+    paint_count.reserve(brush_count);
     brush_usage_side.reserve(brush_count);
 
 
     for (i = 0; i < brush_count; i++) {
-        pthread_mutex_init(&ingredients_mutex[i], NULL);
+        pthread_mutex_init(&paint_mutex[i], NULL);
         pthread_mutex_init(&brush_mutex[i], NULL);
-        pthread_cond_init(&ingredients_cond[i], NULL);
+        pthread_cond_init(&paint_cond[i], NULL);
         pthread_cond_init(&brush_cond[i], NULL);
-        ingredients_count[i] = 5;
+        paint_count[i] = 5;
         brush_usage_side[i] = 0;
     }
 

@@ -9,29 +9,29 @@ void FillingHelper::work() {
     while (true) {
         int time = rand()% HELPER_TIMEOUT +1;
 
-        printf(ANSI_COLOR_CYAN "[Ingredients] Helper will sleep for %i seconds\n" ANSI_COLOR_RESET, time);
+        printf(ANSI_COLOR_CYAN "[Paints] Helper will sleep for %i seconds\n" ANSI_COLOR_RESET, time);
         fflush(stdout);
 
         sleep(time);
 
-        printf(ANSI_COLOR_CYAN "[Ingredients] Helper will now fill bowls\n" ANSI_COLOR_RESET);
+        printf(ANSI_COLOR_CYAN "[Paints] Helper will now fill bowls\n" ANSI_COLOR_RESET);
         fflush(stdout);
 
         for(int i = 0; i < _brush_count; i++)
         {
-            // Try to lock ingredient at i index, where 0 <= i <= total_painters/2;
-            pthread_mutex_lock(&ingredients_mutex[i]);
+            // Try to lock paint at i index, where 0 <= i <= total_painters/2;
+            pthread_mutex_lock(&paint_mutex[i]);
 
-            ingredients_count[i] = 5;
+            paint_count[i] = 5;
 
             // Notify that the resource was updated
-            pthread_cond_broadcast(&ingredients_cond[i]);
+            pthread_cond_broadcast(&paint_cond[i]);
 
             // Unlock resource
-            pthread_mutex_unlock(&ingredients_mutex[i]);
+            pthread_mutex_unlock(&paint_mutex[i]);
         }
 
-        printf(ANSI_COLOR_CYAN "[Ingredients] Helper filled bowls\n" ANSI_COLOR_RESET);
+        printf(ANSI_COLOR_CYAN "[Paints] Helper filled bowls\n" ANSI_COLOR_RESET);
         fflush(stdout);
     }
 
