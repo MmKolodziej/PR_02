@@ -36,7 +36,7 @@ void Painter::work() {
 
 void Painter::paintLine() {
     // locks ingredient at _ingredient_ind position, 0 <= i <= alch_count/2
-    lockIngredient();
+    lockPaint();
 
     // locks brush at _brush_ind position, 0 <= i <= alch_count/2
     lockBrush();
