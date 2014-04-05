@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-c -Wall
 
-all: parallel
+all: clean parallel
 
 parallel: main.o global.o painter.o helper.o clearing_helper.o filling_helper.o
 	$(CC) main.o global.o painter.o helper.o filling_helper.o clearing_helper.o -o parallel -lpthread
@@ -26,3 +26,6 @@ global.o: global.cpp
 
 clean:
 	rm -rf *o parallel
+
+run:
+	./parallel $3
