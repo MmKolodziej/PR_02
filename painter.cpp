@@ -41,7 +41,10 @@ void Painter::produceGold() {
     // locks brush at _brush_ind position, 0 <= i <= alch_count/2
     lockBrush();
 
-    // unlocks 2 mutexes
+    // locks wine
+    lockWine();
+
+    // unlocks 3 mutexes
     releaseStuff();
 }
 
@@ -96,6 +99,27 @@ void Painter::lockBrush() {
     }
 }
 
+void Painter::lockWine() {
+  pthread_mutex_lock(&wine_mutex);
+
+  if(wine_count>0)
+  {
+      wine_count--;
+
+      printf(ANSI_COLOR_YELLOW "[INFO] [Wine] Left: %i\n", wine_count);
+      printf(ANSI_COLOR_GREEN "[SUCC] [%i] Painter poured wine into glass\n" ANSI_COLOR_RESET, number);
+      fflush(stdout);
+  }
+  else {
+      printf(ANSI_COLOR_YELLOW "[INFO] [WINE] Left: %i\n", wine_count);
+      printf(ANSI_COLOR_RED "[FAIL] [%i] Painter waiting for wine...\n" ANSI_COLOR_RESET, number);
+      fflush(stdout);
+
+      // if wine is not available, wait until Helper notifies it's available
+      pthread_cond_wait(&wine_cond, &wine_mutex);
+  }
+}
+
 void Painter::releaseStuff() {
     _produced_gold++;
 
@@ -105,6 +129,7 @@ void Painter::releaseStuff() {
     // Release all mutex after job is finished
     pthread_mutex_unlock(&paint_mutex[_paint_ind]);
     pthread_mutex_unlock(&brush_mutex[_brush_ind]);
+    pthread_mutex_unlock(&wine_mutex);
 
     printf("[INFO] [%i] Painter released bowl & brush.\n", number);
     fflush(stdout);

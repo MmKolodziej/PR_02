@@ -28,6 +28,7 @@ private:
 
     void lockPaint();
     void lockBrush();
+    void lockWine();
     void releaseStuff();
 };
 

@@ -7,6 +7,7 @@
 #include "painter.h"
 #include "clearing_helper.h"
 #include "filling_helper.h"
+#include "wine_helper.h"
 
 #include <vector>
 
@@ -17,12 +18,17 @@ using namespace std;
 void *painterStart(void *p);
 void *fillingHelperStart(void *p);
 void *clearingHelperStart(void *p);
+void *wineHelperStart(void *p);
 
 
 int main(int argc, const char * argv[])
 {
     int i;
-    int painters_count = atoi(argv[1]);
+    int painters_count;
+    if (argc==1)
+      painters_count = 10;
+    else
+      painters_count = atoi(argv[1]);
 
     if (painters_count < 4) {
         printf(ANSI_COLOR_RED "Number of painters must be >= 4!\n" ANSI_COLOR_RESET);
@@ -41,7 +47,7 @@ int main(int argc, const char * argv[])
 
     // Reserve memory for global variables
     t_painters.reserve(painters_count);
-    t_helpers.reserve(2);
+    t_helpers.reserve(3);
     pthread_attr_t attr;
 
     paint_mutex.reserve(brush_count);
@@ -52,13 +58,16 @@ int main(int argc, const char * argv[])
     paint_count.reserve(brush_count);
     brush_usage_side.reserve(brush_count);
 
+    pthread_mutex_init(&wine_mutex, NULL);
+    pthread_cond_init(&wine_cond, NULL);
+    wine_count = 4;
 
     for (i = 0; i < brush_count; i++) {
         pthread_mutex_init(&paint_mutex[i], NULL);
         pthread_mutex_init(&brush_mutex[i], NULL);
         pthread_cond_init(&paint_cond[i], NULL);
         pthread_cond_init(&brush_cond[i], NULL);
-        paint_count[i] = 5;
+        paint_count[i] = 3;
         brush_usage_side[i] = 0;
     }
 
@@ -87,6 +96,7 @@ int main(int argc, const char * argv[])
     // Start helpers
     pthread_create(t_helpers.data(),     &attr, &clearingHelperStart, NULL);
     pthread_create(t_helpers.data() + 1, &attr, &fillingHelperStart, NULL);
+    pthread_create(t_helpers.data() + 2, &attr, &wineHelperStart, NULL);
 
     // Start painters
     for(i = 0; i < painters_count; i++)
@@ -133,6 +143,18 @@ void *clearingHelperStart(void *p) {
     printf(ANSI_COLOR_YELLOW "[Helper] Clearing Helper starts working\n" ANSI_COLOR_RESET);
 
     clearingObj->work();
+
+    printf(ANSI_COLOR_YELLOW "Finished!" ANSI_COLOR_RESET);
+
+    pthread_exit(NULL);
+}
+
+void *wineHelperStart(void *p) {
+    WineHelper *wineObj = new WineHelper();
+
+    printf(ANSI_COLOR_YELLOW "[Helper] Wine Helper starts working\n" ANSI_COLOR_RESET);
+
+    wineObj->work();
 
     printf(ANSI_COLOR_YELLOW "Finished!" ANSI_COLOR_RESET);
 

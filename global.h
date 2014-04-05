@@ -6,12 +6,15 @@
 
 extern std::vector<pthread_mutex_t> paint_mutex;
 extern std::vector<pthread_mutex_t> brush_mutex;
+extern pthread_mutex_t wine_mutex;
 extern std::vector<pthread_cond_t>  paint_cond;
 extern std::vector<pthread_cond_t>  brush_cond;
+extern pthread_cond_t wine_cond;
 
 extern std::vector<int> paint_count;
 extern std::vector<int> brush_usage_side;
 
+extern int wine_count;
 extern int brush_count;
 
 #define ANSI_COLOR_RED     "\x1b[31m"
