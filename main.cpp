@@ -34,7 +34,7 @@ int main(int argc, const char * argv[])
         exit(2);
     }
 
-    pots_count = painters_count / 2;
+    brush_count = painters_count / 2;
 
     std::vector<pthread_t> t_painters;
     std::vector<pthread_t> t_helpers;
@@ -44,28 +44,28 @@ int main(int argc, const char * argv[])
     t_helpers.reserve(2);
     pthread_attr_t attr;
 
-    ingredients_mutex.reserve(pots_count);
-    ingredients_cond.reserve(pots_count);
-    pots_mutex.reserve(pots_count);
-    pots_cond.reserve(pots_count);
+    ingredients_mutex.reserve(brush_count);
+    ingredients_cond.reserve(brush_count);
+    brush_mutex.reserve(brush_count);
+    brush_cond.reserve(brush_count);
 
-    ingredients_count.reserve(pots_count);
-    pots_usage_side.reserve(pots_count);
+    ingredients_count.reserve(brush_count);
+    brush_usage_side.reserve(brush_count);
 
 
-    for (i = 0; i < pots_count; i++) {
+    for (i = 0; i < brush_count; i++) {
         pthread_mutex_init(&ingredients_mutex[i], NULL);
-        pthread_mutex_init(&pots_mutex[i], NULL);
+        pthread_mutex_init(&brush_mutex[i], NULL);
         pthread_cond_init(&ingredients_cond[i], NULL);
-        pthread_cond_init(&pots_cond[i], NULL);
+        pthread_cond_init(&brush_cond[i], NULL);
         ingredients_count[i] = 5;
-        pots_usage_side[i] = 0;
+        brush_usage_side[i] = 0;
     }
 
     std::vector<Painter> painters;
     painters.reserve(painters_count);
 
-    painters.push_back(Painter(0, 0, pots_count-1));
+    painters.push_back(Painter(0, 0, brush_count-1));
 
 
     int p_ind;
@@ -116,7 +116,7 @@ void *painterStart(void* p)
 }
 
 void *fillingHelperStart(void *p) {
-    FillingHelper *fillingObj = new FillingHelper(pots_count);
+    FillingHelper *fillingObj = new FillingHelper(brush_count);
 
     printf(ANSI_COLOR_YELLOW "[Helper] Filling Helper starts working\n" ANSI_COLOR_RESET);
 
@@ -128,7 +128,7 @@ void *fillingHelperStart(void *p) {
 }
 
 void *clearingHelperStart(void *p) {
-    ClearingHelper *clearingObj = new ClearingHelper(pots_count);
+    ClearingHelper *clearingObj = new ClearingHelper(brush_count);
 
     printf(ANSI_COLOR_YELLOW "[Helper] Clearing Helper starts working\n" ANSI_COLOR_RESET);
 

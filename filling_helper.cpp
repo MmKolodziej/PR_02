@@ -1,8 +1,8 @@
 #include "filling_helper.h"
 #include <unistd.h>
 
-FillingHelper::FillingHelper(int pots_count) {
-    _pots_count = pots_count;
+FillingHelper::FillingHelper(int brush_count) {
+    _brush_count = brush_count;
 }
 
 void FillingHelper::work() {
@@ -17,7 +17,7 @@ void FillingHelper::work() {
         printf(ANSI_COLOR_CYAN "[Ingredients] Helper will now fill bowls\n" ANSI_COLOR_RESET);
         fflush(stdout);
 
-        for(int i = 0; i < _pots_count; i++)
+        for(int i = 0; i < _brush_count; i++)
         {
             // Try to lock ingredient at i index, where 0 <= i <= total_painters/2;
             pthread_mutex_lock(&ingredients_mutex[i]);

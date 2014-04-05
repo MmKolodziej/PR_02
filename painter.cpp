@@ -4,14 +4,14 @@
 
 using namespace std;
 
-Painter::Painter(int i, int ingredient_ind, int pot_ind) {
+Painter::Painter(int i, int ingredient_ind, int brush_ind) {
     number = i;
     _ingredient_ind = ingredient_ind;
-    _pot_ind        = pot_ind;
+    _brush_ind        = brush_ind;
 
     _produced_gold = 0;
 
-    _pot_side = (number % 2 == 0) ? 1 : -1;
+    _brush_side = (number % 2 == 0) ? 1 : -1;
 }
 
 void Painter::work() {
@@ -38,8 +38,8 @@ void Painter::produceGold() {
     // locks ingredient at _ingredient_ind position, 0 <= i <= alch_count/2
     lockIngredient();
 
-    // locks pot at _pot_ind position, 0 <= i <= alch_count/2
-    lockPot();
+    // locks brush at _brush_ind position, 0 <= i <= alch_count/2
+    lockBrush();
 
     // unlocks 2 mutexes
     releaseStuff();
@@ -70,28 +70,28 @@ void Painter::lockIngredient() {
     }
 }
 
-void Painter::lockPot() {
-    printf("[INFO] [%i] Painter tries to obtain pot\n", number);
+void Painter::lockBrush() {
+    printf("[INFO] [%i] Painter tries to obtain brush\n", number);
     fflush(stdout);
 
-    pthread_mutex_lock(&pots_mutex[_pot_ind]);
+    pthread_mutex_lock(&brush_mutex[_brush_ind]);
 
     // Pot is cleared or was used by this painter
-    if(pots_usage_side[_pot_ind] == 0 || pots_usage_side[_pot_ind] == _pot_side)
+    if(brush_usage_side[_brush_ind] == 0 || brush_usage_side[_brush_ind] == _brush_side)
     {
-        // Set pot usage to the painter's side
-        pots_usage_side[_pot_ind] = _pot_side;
+        // Set brush usage to the painter's side
+        brush_usage_side[_brush_ind] = _brush_side;
 
-        printf("[INFO] [%i] Painter locked pot\n", number);
+        printf("[INFO] [%i] Painter locked brush\n", number);
         fflush(stdout);
     } else {
-        printf(ANSI_COLOR_RED "[FAIL] [%i] Painter could not use pot as it is dirty\n" ANSI_COLOR_RESET, number);
+        printf(ANSI_COLOR_RED "[FAIL] [%i] Painter could not use brush as it is dirty\n" ANSI_COLOR_RESET, number);
         fflush(stdout);
 
-        // Wait untill Helper clears pot as it's unusable for this Painter
-        pthread_cond_wait(&pots_cond[_pot_ind], &pots_mutex[_pot_ind]);
+        // Wait untill Helper clears brush as it's unusable for this Painter
+        pthread_cond_wait(&brush_cond[_brush_ind], &brush_mutex[_brush_ind]);
 
-        printf(ANSI_COLOR_GREEN "[SUCC] [%i] Painter found his pot clear\n" ANSI_COLOR_RESET, number);
+        printf(ANSI_COLOR_GREEN "[SUCC] [%i] Painter found his brush clear\n" ANSI_COLOR_RESET, number);
         fflush(stdout);
     }
 }
@@ -104,8 +104,8 @@ void Painter::releaseStuff() {
 
     // Release all mutex after job is finished
     pthread_mutex_unlock(&ingredients_mutex[_ingredient_ind]);
-    pthread_mutex_unlock(&pots_mutex[_pot_ind]);
+    pthread_mutex_unlock(&brush_mutex[_brush_ind]);
 
-    printf("[INFO] [%i] Painter released bowl & pot.\n", number);
+    printf("[INFO] [%i] Painter released bowl & brush.\n", number);
     fflush(stdout);
 }

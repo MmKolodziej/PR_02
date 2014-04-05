@@ -1,8 +1,8 @@
 #include "clearing_helper.h"
 #include <unistd.h>
 
-ClearingHelper::ClearingHelper(int pots_count) {
-    _pots_count = pots_count;
+ClearingHelper::ClearingHelper(int brush_count) {
+    _brush_count = brush_count;
 }
 
 void ClearingHelper::work() {
@@ -14,24 +14,24 @@ void ClearingHelper::work() {
 
         sleep(time);
 
-        printf(ANSI_COLOR_CYAN "[Clearing] Helper will now clear pots\n" ANSI_COLOR_RESET);
+        printf(ANSI_COLOR_CYAN "[Clearing] Helper will now clear brushes\n" ANSI_COLOR_RESET);
         fflush(stdout);
 
-        for(int i = 0; i < _pots_count; i++)
+        for(int i = 0; i < _brush_count; i++)
         {
-            // Lock pot
-            pthread_mutex_lock(&pots_mutex[i]);
+            // Lock brush
+            pthread_mutex_lock(&brush_mutex[i]);
 
-            pots_usage_side[i] = 0;
+            brush_usage_side[i] = 0;
 
-            // Notify that the pot's status is set back to 0
-            pthread_cond_broadcast(&pots_cond[i]);
+            // Notify that the brush's status is set back to 0
+            pthread_cond_broadcast(&brush_cond[i]);
 
-            // Unlock pot
-            pthread_mutex_unlock(&pots_mutex[i]);
+            // Unlock brush
+            pthread_mutex_unlock(&brush_mutex[i]);
         }
 
-        printf(ANSI_COLOR_CYAN "[Clearing] Helper cleared pots\n" ANSI_COLOR_RESET);
+        printf(ANSI_COLOR_CYAN "[Clearing] Helper cleared brushes\n" ANSI_COLOR_RESET);
         fflush(stdout);
     }
 

@@ -8,7 +8,7 @@
 class FillingHelper : Helper {
 
 public:
-    FillingHelper(int pots_count);
+    FillingHelper(int brush_count);
     void work();
 };
 

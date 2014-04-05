@@ -8,7 +8,7 @@
 class ClearingHelper : Helper {
 
 public:
-    ClearingHelper(int pots_count);
+    ClearingHelper(int brush_count);
     void work();
 };
 

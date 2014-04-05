@@ -11,7 +11,7 @@ using namespace std;
 
 class Helper {
 protected:
-    int _pots_count;
+    int _brush_count;
 
 public:
     virtual void work() {};

@@ -5,14 +5,14 @@
 #include <pthread.h>
 
 extern std::vector<pthread_mutex_t> ingredients_mutex;
-extern std::vector<pthread_mutex_t> pots_mutex;
+extern std::vector<pthread_mutex_t> brush_mutex;
 extern std::vector<pthread_cond_t>  ingredients_cond;
-extern std::vector<pthread_cond_t>  pots_cond;
+extern std::vector<pthread_cond_t>  brush_cond;
 
 extern std::vector<int> ingredients_count;
-extern std::vector<int> pots_usage_side;
+extern std::vector<int> brush_usage_side;
 
-extern int pots_count;
+extern int brush_count;
 
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_GREEN   "\x1b[32m"
