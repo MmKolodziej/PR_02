@@ -9,7 +9,7 @@ Painter::Painter(int i, int paint_ind, int brush_ind) {
     _paint_ind = paint_ind;
     _brush_ind        = brush_ind;
 
-    _produced_gold = 0;
+    _painted_lines = 0;
 
     _brush_side = (number % 2 == 0) ? 1 : -1;
 }
@@ -17,26 +17,26 @@ Painter::Painter(int i, int paint_ind, int brush_ind) {
 void Painter::work() {
     printf(ANSI_COLOR_YELLOW"[INFO] [%i] Painter starts working\n" ANSI_COLOR_RESET, number);
 
-    while(_produced_gold < 10) {
+    while(_painted_lines < 10) {
         srand(number);
 
         int sleep_time = rand()%5+1;
 
         printf("[INFO] [%i] Painter needs to think for %i seconds\n", number, sleep_time);
         sleep(sleep_time);
-        printf("[INFO] [%i] Painter wants to try his luck with making gold\n", number);
+        printf("[INFO] [%i] Painter wants to try his luck with painting a line\n", number);
         fflush(stdout);
 
-        produceGold();
+        paintLine();
     }
 
     printf(ANSI_COLOR_GREEN "****[FINISH] [%i] Painter goes to lunch and finishes his work.\n", number);
     fflush(stdout);
 }
 
-void Painter::produceGold() {
-    // locks paint at _paint_ind position, 0 <= i <= alch_count/2
-    lockPaint();
+void Painter::paintLine() {
+    // locks ingredient at _ingredient_ind position, 0 <= i <= alch_count/2
+    lockIngredient();
 
     // locks brush at _brush_ind position, 0 <= i <= alch_count/2
     lockBrush();
@@ -121,9 +121,9 @@ void Painter::lockWine() {
 }
 
 void Painter::releaseStuff() {
-    _produced_gold++;
+    _painted_lines++;
 
-    printf(ANSI_COLOR_GREEN "[SUCC] [%i] Painter produced gold. Total gold produced: %i\n" ANSI_COLOR_RESET, number, _produced_gold);
+    printf(ANSI_COLOR_GREEN "[SUCC] [%i] Painter painted a line. Total lines produced: %i\n" ANSI_COLOR_RESET, number, _painted_lines);
     fflush(stdout);
 
     // Release all mutex after job is finished

@@ -9,7 +9,7 @@
 #include "global.h"
 
 class Painter {
-    int _produced_gold;
+    int _painted_lines;
 
     // -1 - right, 1 - left, 0 - clear
     int _brush_side;
@@ -24,7 +24,7 @@ public:
     void work();
 
 private:
-    void produceGold();
+    void paintLine();
 
     void lockPaint();
     void lockBrush();
