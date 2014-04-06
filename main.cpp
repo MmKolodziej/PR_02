@@ -1,6 +1,7 @@
 #include <iostream>
 #include <pthread.h>
 
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -19,7 +20,6 @@ void *painterStart(void *p);
 void *fillingHelperStart(void *p);
 void *clearingHelperStart(void *p);
 void *wineHelperStart(void *p);
-
 
 int main(int argc, const char * argv[])
 {
@@ -117,6 +117,7 @@ int main(int argc, const char * argv[])
 
 void *painterStart(void* p)
 {
+    srand(time(NULL));
     Painter *obj = (Painter*)p;
 
     obj->work();
@@ -125,6 +126,7 @@ void *painterStart(void* p)
 }
 
 void *fillingHelperStart(void *p) {
+    srand(time(NULL));
     FillingHelper *fillingObj = new FillingHelper(brush_count);
 
     printf(ANSI_COLOR_YELLOW "[Helper] Filling Helper starts working\n" ANSI_COLOR_RESET);
@@ -137,6 +139,7 @@ void *fillingHelperStart(void *p) {
 }
 
 void *clearingHelperStart(void *p) {
+    srand(time(NULL));
     ClearingHelper *clearingObj = new ClearingHelper(brush_count);
 
     printf(ANSI_COLOR_YELLOW "[Helper] Clearing Helper starts working\n" ANSI_COLOR_RESET);
@@ -149,6 +152,7 @@ void *clearingHelperStart(void *p) {
 }
 
 void *wineHelperStart(void *p) {
+    srand(time(NULL));
     WineHelper *wineObj = new WineHelper();
 
     printf(ANSI_COLOR_YELLOW "[Helper] Wine Helper starts working\n" ANSI_COLOR_RESET);

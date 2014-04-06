@@ -1,6 +1,6 @@
 #include "painter.h"
 #include <unistd.h>
-#import "global.h"
+#include "global.h"
 
 using namespace std;
 
@@ -20,11 +20,9 @@ void Painter::work() {
     printf(ANSI_COLOR_YELLOW"[INFO] [%i] Painter starts working\n" ANSI_COLOR_RESET, number);
 
     while(_painted_lines < 10) {
-        srand(number);
-
         int sleep_time = rand()%1500000+500000; // sleeping for 0.5 - 2 seconds
 
-        printf("[INFO] [%i] Painter needs to think for %i seconds\n", number, sleep_time);
+        printf("[INFO] [%i] Painter needs to think for %.3f seconds\n", number, (float)(sleep_time)/1000000);
         usleep(sleep_time);
         printf("[INFO] [%i] Painter wants to try his luck with painting a line\n", number);
         fflush(stdout);
@@ -58,13 +56,14 @@ void Painter::lockPaint() {
     if (!paint_mutex_locked)
       pthread_mutex_lock(&paint_mutex[_paint_ind]);
 
-    printf( "[INFO] [PAINT] Left: %i\n", paint_count[_paint_ind]);
+    printf( "[INFO] [PAINT: %i] Left: %i\n", _paint_ind, paint_count[_paint_ind]);
     if(paint_count[_paint_ind] > 0)
     {
         paint_count[_paint_ind]--;
 
         printf(ANSI_COLOR_GREEN "[SUCC] [%i] Painter found paint in his bucket\n" ANSI_COLOR_RESET, number);
         fflush(stdout);
+        paint_mutex_locked = false;
     }
     else {
         printf(ANSI_COLOR_RED "[FAIL] [%i] Painter found no paint in his bucket. Waiting for the filling helper...\n" ANSI_COLOR_RESET, number);
@@ -87,13 +86,14 @@ void Painter::lockBrush() {
       pthread_mutex_lock(&brush_mutex[_brush_ind]);
 
     // Brush is cleared or was used by this painter
-    if(brush_usage_side[_brush_ind] == CLEAR || brush_usage_side[_brush_ind] == _brush_side)
+    if(brush_usage_side[_brush_ind] == CLEAN || brush_usage_side[_brush_ind] == _brush_side)
     {
         // Set brush usage to the painter's side
         brush_usage_side[_brush_ind] = _brush_side;
 
-        printf(ANSI_COLOR_GREEN "[SUCC] [%i] Painter found his brush clear\n" ANSI_COLOR_RESET, number);
+        printf(ANSI_COLOR_GREEN "[SUCC] [%i] Painter found his brush clean\n" ANSI_COLOR_RESET, number);
         fflush(stdout);
+        brush_mutex_locked = false;
     } else {
         printf(ANSI_COLOR_RED "[FAIL] [%i] Painter could not use brush as it is dirty\n" ANSI_COLOR_RESET, number);
         fflush(stdout);
