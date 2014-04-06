@@ -83,7 +83,7 @@ void Painter::lockBrush() {
     printf("[INFO] [%i] Painter tries to obtain brush\n", number);
     fflush(stdout);
 
-    if (brush_mutex_locked)
+    if (!brush_mutex_locked)
       pthread_mutex_lock(&brush_mutex[_brush_ind]);
 
     // Brush is cleared or was used by this painter
