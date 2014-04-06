@@ -7,7 +7,7 @@ ClearingHelper::ClearingHelper(int brush_count) {
 
 void ClearingHelper::work() {
     while (true) {
-        int time = rand() % HELPER_TIMEOUT +1;
+        int time = rand() % HELPER_TIMEOUT + 500000;
 
         printf(ANSI_COLOR_CYAN "[Clearing] Helper will sleep for %i seconds\n" ANSI_COLOR_RESET, time);
         fflush(stdout);

@@ -22,7 +22,7 @@ void Painter::work() {
     while(_painted_lines < 10) {
         srand(number);
 
-        int sleep_time = rand()%5+1;
+        int sleep_time = rand()%1500000+500000; // sleeping for 0.5 - 2 seconds
 
         printf("[INFO] [%i] Painter needs to think for %i seconds\n", number, sleep_time);
         usleep(sleep_time);
@@ -137,7 +137,7 @@ void Painter::lockWine() {
 void Painter::releaseStuff() {
     _painted_lines++;
 
-    printf(ANSI_COLOR_GREEN "[SUCC] [%i] Painter painted a line. Total lines produced: %i\n" ANSI_COLOR_RESET, number, _painted_lines);
+    printf(ANSI_COLOR_GREEN "[SUCC] [%i] Painter painted a line. Total lines drawn: %i\n" ANSI_COLOR_RESET, number, _painted_lines);
     fflush(stdout);
 
     // Release all mutex after job is finished

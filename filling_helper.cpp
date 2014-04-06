@@ -7,7 +7,7 @@ FillingHelper::FillingHelper(int brush_count) {
 
 void FillingHelper::work() {
     while (true) {
-        int time = rand()% HELPER_TIMEOUT +1;
+        int time = rand()% HELPER_TIMEOUT + 500000;
 
         printf(ANSI_COLOR_CYAN "[Paints] Helper will sleep for %i seconds\n" ANSI_COLOR_RESET, time);
         fflush(stdout);

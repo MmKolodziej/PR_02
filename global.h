@@ -26,6 +26,6 @@ enum E_BRUSH_USAGE {CLEAR, LEFT, RIGHT};
 #define ANSI_COLOR_CYAN    "\x1b[36m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
-#define HELPER_TIMEOUT 20
+#define HELPER_TIMEOUT 1500000
 
 #endif
