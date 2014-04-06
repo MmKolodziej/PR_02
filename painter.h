@@ -21,6 +21,8 @@ public:
     Painter() {};
     Painter(int i, int paint_ind, int brush_ind);
     bool wine_mutex_locked;
+    bool brush_mutex_locked;
+    bool paint_mutex_locked;
     void work();
 
 private:

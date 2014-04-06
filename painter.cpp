@@ -9,6 +9,8 @@ Painter::Painter(int i, int paint_ind, int brush_ind) {
     _paint_ind = paint_ind;
     _brush_ind = brush_ind;
     wine_mutex_locked = false;
+    brush_mutex_locked = false;
+    paint_mutex_locked = false;
     _painted_lines = 0;
 
     _brush_side = (number % 2 == 0) ? LEFT : RIGHT;
@@ -53,7 +55,8 @@ void Painter::lockPaint() {
     fflush(stdout);
 
     // Block paints
-    pthread_mutex_lock(&paint_mutex[_paint_ind]);
+    if (!paint_mutex_locked)
+      pthread_mutex_lock(&paint_mutex[_paint_ind]);
 
     printf(ANSI_COLOR_YELLOW "[INFO] [PAINT] Left: %i\n", paint_count[_paint_ind]);
     if(paint_count[_paint_ind] > 0)
@@ -69,6 +72,10 @@ void Painter::lockPaint() {
 
         // if resources are not available, wait until Helper notifies it's available
         pthread_cond_wait(&paint_cond[_paint_ind], &paint_mutex[_paint_ind]);
+
+        // We have a mutex locked, we go checking again
+        paint_mutex_locked = true;
+        lockPaint();
     }
 }
 
@@ -76,7 +83,8 @@ void Painter::lockBrush() {
     printf("[INFO] [%i] Painter tries to obtain brush\n", number);
     fflush(stdout);
 
-    pthread_mutex_lock(&brush_mutex[_brush_ind]);
+    if (brush_mutex_locked)
+      pthread_mutex_lock(&brush_mutex[_brush_ind]);
 
     // Brush is cleared or was used by this painter
     if(brush_usage_side[_brush_ind] == CLEAR || brush_usage_side[_brush_ind] == _brush_side)
@@ -84,7 +92,7 @@ void Painter::lockBrush() {
         // Set brush usage to the painter's side
         brush_usage_side[_brush_ind] = _brush_side;
 
-        printf("[INFO] [%i] Painter locked brush\n", number);
+        printf(ANSI_COLOR_GREEN "[SUCC] [%i] Painter found his brush clear\n" ANSI_COLOR_RESET, number);
         fflush(stdout);
     } else {
         printf(ANSI_COLOR_RED "[FAIL] [%i] Painter could not use brush as it is dirty\n" ANSI_COLOR_RESET, number);
@@ -93,8 +101,9 @@ void Painter::lockBrush() {
         // Wait untill Helper clears brush as it's unusable for this Painter
         pthread_cond_wait(&brush_cond[_brush_ind], &brush_mutex[_brush_ind]);
 
-        printf(ANSI_COLOR_GREEN "[SUCC] [%i] Painter found his brush clear\n" ANSI_COLOR_RESET, number);
-        fflush(stdout);
+        // We have a mutex locked, we go checking again
+        brush_mutex_locked = true;
+        lockBrush();
     }
 }
 
@@ -118,6 +127,8 @@ void Painter::lockWine() {
 
       // if wine is not available, wait until Helper notifies it's available
       pthread_cond_wait(&wine_cond, &wine_mutex);
+
+      // if we get a signal that wine has been refilled, we check again if there's enough
       wine_mutex_locked = true;
       lockWine();
   }
@@ -134,6 +145,6 @@ void Painter::releaseStuff() {
     pthread_mutex_unlock(&brush_mutex[_brush_ind]);
     pthread_mutex_unlock(&wine_mutex);
 
-    printf("[INFO] [%i] Painter released bucket & brush.\n", number);
+    printf("[INFO] [%i] Painter released bucket, brush and wine.\n", number);
     fflush(stdout);
 }
