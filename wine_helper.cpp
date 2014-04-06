@@ -15,7 +15,7 @@ void WineHelper::work() {
         printf(ANSI_COLOR_CYAN "[Wine] Helper will now refill wine\n" ANSI_COLOR_RESET);
         fflush(stdout);
 
-        // Lock brush
+        // Lock wine
         pthread_mutex_lock(&wine_mutex);
 
         wine_count = 4;

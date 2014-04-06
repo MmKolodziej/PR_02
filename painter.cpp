@@ -32,7 +32,7 @@ void Painter::work() {
         paintLine();
     }
 
-    printf(ANSI_COLOR_GREEN "****[FINISH] [%i] Painter finishes his work.\n", number);
+    printf(ANSI_COLOR_GREEN "****[FINISH] [%i] Painter finishes his work.\n"ANSI_COLOR_RESET, number);
     fflush(stdout);
 }
 
@@ -58,7 +58,7 @@ void Painter::lockPaint() {
     if (!paint_mutex_locked)
       pthread_mutex_lock(&paint_mutex[_paint_ind]);
 
-    printf(ANSI_COLOR_YELLOW "[INFO] [PAINT] Left: %i\n", paint_count[_paint_ind]);
+    printf( "[INFO] [PAINT] Left: %i\n", paint_count[_paint_ind]);
     if(paint_count[_paint_ind] > 0)
     {
         paint_count[_paint_ind]--;
@@ -73,7 +73,7 @@ void Painter::lockPaint() {
         // if resources are not available, wait until Helper notifies it's available
         pthread_cond_wait(&paint_cond[_paint_ind], &paint_mutex[_paint_ind]);
 
-        // We have a mutex locked, we go checking again
+        // We have a mutex locked, we can take paint now
         paint_mutex_locked = true;
         lockPaint();
     }
@@ -115,13 +115,13 @@ void Painter::lockWine() {
   {
       wine_count--;
 
-      printf(ANSI_COLOR_YELLOW "[INFO] [Wine] Left: %i\n", wine_count);
+      printf( "[INFO] [Wine] Left: %i\n" , wine_count);
       printf(ANSI_COLOR_GREEN "[SUCC] [%i] Painter poured wine into glass\n" ANSI_COLOR_RESET, number);
       fflush(stdout);
       wine_mutex_locked = false;
   }
   else {
-      printf(ANSI_COLOR_YELLOW "[INFO] [WINE] Left: %i\n", wine_count);
+      printf( "[INFO] [WINE] Left: %i\n", wine_count);
       printf(ANSI_COLOR_RED "[FAIL] [%i] Painter waiting for wine...\n" ANSI_COLOR_RESET, number);
       fflush(stdout);
 
