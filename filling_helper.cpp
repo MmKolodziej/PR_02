@@ -14,7 +14,7 @@ void FillingHelper::work() {
 
         sleep(time);
 
-        printf(ANSI_COLOR_CYAN "[Paints] Helper will now fill bowls\n" ANSI_COLOR_RESET);
+        printf(ANSI_COLOR_CYAN "[Paints] Helper will now fill buckets\n" ANSI_COLOR_RESET);
         fflush(stdout);
 
         for(int i = 0; i < _brush_count; i++)
@@ -31,7 +31,7 @@ void FillingHelper::work() {
             pthread_mutex_unlock(&paint_mutex[i]);
         }
 
-        printf(ANSI_COLOR_CYAN "[Paints] Helper filled bowls\n" ANSI_COLOR_RESET);
+        printf(ANSI_COLOR_CYAN "[Paints] Helper filled buckets\n" ANSI_COLOR_RESET);
         fflush(stdout);
     }
 

@@ -16,6 +16,7 @@ extern std::vector<int> brush_usage_side;
 
 extern int wine_count;
 extern int brush_count;
+enum E_BRUSH_USAGE {CLEAR, LEFT, RIGHT};
 
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_GREEN   "\x1b[32m"

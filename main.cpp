@@ -71,24 +71,24 @@ int main(int argc, const char * argv[])
         brush_usage_side[i] = 0;
     }
 
+    // Initialize painters
     std::vector<Painter> painters;
     painters.reserve(painters_count);
 
     painters.push_back(Painter(0, 0, brush_count-1));
 
-
-    int p_ind;
-    int i_ind;
+    int brush_ind;
+    int paint_ind;
 
     for (i = 1; i < painters_count; i++) {
-        i_ind = i/2;
+        paint_ind = i/2;
 
         if (i % 2 == 0) {
-            p_ind = i/2 - 1;
+            brush_ind = i/2 - 1;
         } else {
-            p_ind = i/2;
+            brush_ind = i/2;
         }
-        painters.push_back(Painter(i, i_ind, p_ind));
+        painters.push_back(Painter(i, paint_ind, brush_ind));
     }
 
     pthread_attr_init(&attr);
