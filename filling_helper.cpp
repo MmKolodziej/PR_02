@@ -22,7 +22,7 @@ void FillingHelper::work() {
             // Try to lock paint at i index, where 0 <= i <= total_painters/2;
             pthread_mutex_lock(&paint_mutex[i]);
 
-            paint_count[i] = 5;
+            paint_count[i] = 3;
 
             // Notify that the resource was updated
             pthread_cond_broadcast(&paint_cond[i]);
