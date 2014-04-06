@@ -1,7 +1,20 @@
+ifeq (run,$(firstword $(MAKECMDGOALS)))
+RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+$(eval $(RUN_ARGS):;@:)
+ifeq (run,$(MAKECMDGOALS))
+RUN_ARGS := 10
+endif
+endif
+
 CC=g++
 CFLAGS=-c -Wall
 
 all: clean parallel
+
+compile: clean parallel
+
+parallel: main.o global.o painter.o helper.o clearing_helper.o filling_helper.o wine_helper.o
+	$(CC) main.o global.o painter.o helper.o filling_helper.o clearing_helper.o wine_helper.o -o parallel -lpthread
 
 parallel: main.o global.o painter.o helper.o clearing_helper.o filling_helper.o wine_helper.o
 	$(CC) main.o global.o painter.o helper.o filling_helper.o clearing_helper.o wine_helper.o -o parallel -lpthread
@@ -31,4 +44,4 @@ clean:
 	rm -rf *o parallel
 
 run:
-	./parallel $3
+	./parallel $(RUN_ARGS)
