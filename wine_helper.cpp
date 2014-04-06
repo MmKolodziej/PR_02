@@ -5,12 +5,12 @@ WineHelper::WineHelper() {}
 
 void WineHelper::work() {
     while (true) {
-        int time = rand() % HELPER_TIMEOUT +1;
+        int time = rand() % HELPER_TIMEOUT +1000;
 
         printf(ANSI_COLOR_CYAN "[Wine] Helper will sleep for %i seconds\n" ANSI_COLOR_RESET, time);
         fflush(stdout);
 
-        sleep(time);
+        usleep(time);
 
         printf(ANSI_COLOR_CYAN "[Wine] Helper will now refill wine\n" ANSI_COLOR_RESET);
         fflush(stdout);

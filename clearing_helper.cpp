@@ -12,7 +12,7 @@ void ClearingHelper::work() {
         printf(ANSI_COLOR_CYAN "[Clearing] Helper will sleep for %i seconds\n" ANSI_COLOR_RESET, time);
         fflush(stdout);
 
-        sleep(time);
+        usleep(time);
 
         printf(ANSI_COLOR_CYAN "[Clearing] Helper will now clear brushes\n" ANSI_COLOR_RESET);
         fflush(stdout);

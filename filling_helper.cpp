@@ -12,7 +12,7 @@ void FillingHelper::work() {
         printf(ANSI_COLOR_CYAN "[Paints] Helper will sleep for %i seconds\n" ANSI_COLOR_RESET, time);
         fflush(stdout);
 
-        sleep(time);
+        usleep(time);
 
         printf(ANSI_COLOR_CYAN "[Paints] Helper will now fill buckets\n" ANSI_COLOR_RESET);
         fflush(stdout);

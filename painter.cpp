@@ -8,7 +8,7 @@ Painter::Painter(int i, int paint_ind, int brush_ind) {
     number = i;
     _paint_ind = paint_ind;
     _brush_ind = brush_ind;
-
+    wine_mutex_locked = false;
     _painted_lines = 0;
 
     _brush_side = (number % 2 == 0) ? LEFT : RIGHT;
@@ -23,7 +23,7 @@ void Painter::work() {
         int sleep_time = rand()%5+1;
 
         printf("[INFO] [%i] Painter needs to think for %i seconds\n", number, sleep_time);
-        sleep(sleep_time);
+        usleep(sleep_time);
         printf("[INFO] [%i] Painter wants to try his luck with painting a line\n", number);
         fflush(stdout);
 
@@ -99,7 +99,8 @@ void Painter::lockBrush() {
 }
 
 void Painter::lockWine() {
-  pthread_mutex_lock(&wine_mutex);
+  if (!wine_mutex_locked)
+    pthread_mutex_lock(&wine_mutex);
 
   if(wine_count>0)
   {
@@ -108,6 +109,7 @@ void Painter::lockWine() {
       printf(ANSI_COLOR_YELLOW "[INFO] [Wine] Left: %i\n", wine_count);
       printf(ANSI_COLOR_GREEN "[SUCC] [%i] Painter poured wine into glass\n" ANSI_COLOR_RESET, number);
       fflush(stdout);
+      wine_mutex_locked = false;
   }
   else {
       printf(ANSI_COLOR_YELLOW "[INFO] [WINE] Left: %i\n", wine_count);
@@ -116,6 +118,8 @@ void Painter::lockWine() {
 
       // if wine is not available, wait until Helper notifies it's available
       pthread_cond_wait(&wine_cond, &wine_mutex);
+      wine_mutex_locked = true;
+      lockWine();
   }
 }
 
