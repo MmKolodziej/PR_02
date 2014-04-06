@@ -16,9 +16,6 @@ compile: clean parallel
 parallel: main.o global.o painter.o helper.o clearing_helper.o filling_helper.o wine_helper.o
 	$(CC) main.o global.o painter.o helper.o filling_helper.o clearing_helper.o wine_helper.o -o parallel -lpthread
 
-parallel: main.o global.o painter.o helper.o clearing_helper.o filling_helper.o wine_helper.o
-	$(CC) main.o global.o painter.o helper.o filling_helper.o clearing_helper.o wine_helper.o -o parallel -lpthread
-
 main.o: main.cpp
 	$(CC) $(CFLAGS) main.cpp
 
